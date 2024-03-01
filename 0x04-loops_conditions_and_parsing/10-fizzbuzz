@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# This script displays numbers 1 to 100 except FizzBuzz, Fizz and Buzz for multiples of both 3 and 5, 3only and 5 only respectively
+for i in {1..100}
+do
+	if [ $((i % 3)) -eq 0 ] && [ $((i % 5)) -eq 0 ]
+	then
+		echo "FizzBuzz"
+	elif [ $((i % 3)) -eq 0 ]
+	then
+		echo "Fizz"
+	elif [ $((i % 5)) -eq 0 ]
+	then
+		echo "Buzz"
+	else
+		echo "$i"
+	fi
+done
