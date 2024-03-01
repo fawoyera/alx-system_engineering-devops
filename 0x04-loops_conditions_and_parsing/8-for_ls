@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# This script displays the names of files in the current directory with named truncated after first dash
+for i in {1..1}
+do
+	find . -mindepth 1 -printf '%P\n' | cut -f 2- -d '-'
+done
+export i
