@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# This script displays the usernames, user ids and home directory path for the users in the file /etc/passwd
+exec 3< /etc/passwd
+exit_status=0
+while [ $exit_status -eq 0 ]
+do
+	read -r -u 3
+	((exit_status = $?))
+	echo "$REPLY" | cut -f 1,3,6 -d ':'
+done
+exec 3>&-
+
+# The script commented below below does the same as above
+#while IFS= read -r lines
+#do
+#	echo "$lines" | cut -f 1,3,6 -d ':'
+#done < /etc/passwd
