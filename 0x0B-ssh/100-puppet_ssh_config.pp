@@ -1,6 +1,6 @@
 # Puppet manifest to configure configuration file of SSH client
 
-file { '/root/.ssh/config':
+file { '/etc/ssh/ssh_config':
   ensure  => present,
 }
 ->if 'test `grep -q "
@@ -12,7 +12,7 @@ Host 100.26.173.61
 Host 100.26.173.61
 	Hostname 100.26.173.61
 	IdentityFile ~/.ssh/school
-	PasswordAuthentication no" >> /root/.ssh/config':
-  path => '/root/.ssh/config'
+	PasswordAuthentication no" >> /etc/ssh/ssh_config':
+  path => '/etc/ssh/ssh_config'
   }
 }
