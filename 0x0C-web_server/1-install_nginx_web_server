@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Bash script to install and configure nginx web server
+
+# Update the apt
+apt update
+
+# install nginx non-interactively
+apt install nginx -y
+
+# rename the default index page served by nginx
+mv /var/www/html/index.nginx-debian.html /var/www/html/_index.nginx-debian.html
+
+# create new page to be served by nginx
+touch /var/www/html/some_page.html
+
+# echo string into the new page to be served by nginx
+echo "Hello World!" > /var/www/html/some_page.html
+
+# edit and add the new page to the /etc/nginx/sites-available/default
+sed -i '/index index.html index.htm/s/;$/ some_page.html;/' /etc/nginx/sites-available/default
+
+# remove the default simlink
+rm /etc/nginx/sites-enabled/default
+
+# create a new simlink to /etc/nginx/site-available/default
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
+# restart nginx
+service nginx restart
