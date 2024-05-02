@@ -9,7 +9,14 @@ exec { 'apt update':
 # install nginx
 package { 'nginx':
   ensure   => 'installed',
-  provider => 'apt'
+  provider => 'apt',
+  before   => Service['nginx']
+}
+
+# start nginx
+service { 'nginx':
+  ensure => 'running',
+  before => File['/var/www/html/index.nginx-debian.html']
 }
 
 # delete the default index page served by nginx
@@ -68,12 +75,13 @@ file { '/etc/nginx/sites-enabled/default':
 file { '/etc/nginx/sites-enabled/':
   ensure => link,
   target => '/etc/nginx/sites-available/default',
-  before => Service['nginx']
+  before => Service['restart nginx']
 }
 
 # restart nginx if configuration file has changed
-service { 'nginx':
+service { 'restart nginx':
   ensure    => 'running',
+  name      => 'nginx',
   enable    => true,
   subscribe => File['/etc/nginx/sites-enabled/']
 }
