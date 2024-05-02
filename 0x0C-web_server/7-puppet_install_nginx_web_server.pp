@@ -2,7 +2,7 @@
 
 # update the apt
 exec { 'apt update':
-  command => '/usr/bin/apt update',
+  command => 'sudo /usr/bin/apt update',
   before  => Package['nginx']
 }
 
@@ -34,12 +34,12 @@ file { '/var/www/html/some_page.html':
 
 # edit the configuration file and add the new page to it
 exec { 'add new page':
-  command => '/usr/bin/sed -i \'/index index.html index.htm/s/;$/ some_page.html;/\' /etc/nginx/sites-available/default',
+  command => 'sudo /usr/bin/sed -i \'/index index.html index.htm/s/;$/ some_page.html;/\' /etc/nginx/sites-available/default',
 }
 
 # add a redirection to the configuration file
 exec { 'add redirection':
-  command => '/usr/bin/sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
+  command => 'sudo /usr/bin/sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
 
         location /redirect_me {
                 return 301 https://www.alxafrica.com/;
@@ -58,7 +58,7 @@ file { '/var/www/html/customized_404.html':
 
 # add custom 404 page to configuration file
 exec { 'add custom 404 page':
-  command => '/usr/bin/sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
+  command => 'sudo /usr/bin/sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
 
         error_page 404 /customized_404.html;
 EOF',
