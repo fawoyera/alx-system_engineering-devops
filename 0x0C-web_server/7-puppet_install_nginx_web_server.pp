@@ -1,6 +1,50 @@
 # Puppet manifest to install and configure nginx web server
 
-exec { 'install':
-  provider => shell,
-  command  => 'sudo apt-get -y update ; sudo apt-get -y install nginx ; echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html ; sudo sed -i "/server_name _/s/;$/;\n\tlocation /redirect_me { return 301 https:\/\/www.alxafrica.com\/; }/ /etc/nginx/sites-available/default ; sudo service nginx start'
+# Install Nginx
+package { 'nginx':
+  ensure => installed,
+}
+
+# Start Nginx
+service { 'nginx':
+  ensure  => running,
+  enable  => true,
+  require => Package['nginx']
+}
+
+# Edit default index page
+file { '/var/www/html/index.nginx-debian.html':
+  ensure  => file,
+  owner   => 'www-data',
+  group   => 'www-data',
+  mode    => '0755',
+  content => 'Hello World!',
+}
+
+# Edit configuration file
+file { '/etc/nginx/sites-available/default':
+  ensure  => file,
+  owner   => 'www-data',
+  group   => 'www-data',
+  mode    => '0755',
+  content => '
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	root /var/www/html;
+	index index.html index.nginx-debian.html;
+
+	server_name _;
+
+	location /redirect_me {
+		return 301 https://www.alxafrica.com;
+	}
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}',
+  require => Package['nginx'],
+  notify  => Service['nginx'],
 }
