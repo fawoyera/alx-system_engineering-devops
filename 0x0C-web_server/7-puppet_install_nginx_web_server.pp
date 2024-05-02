@@ -35,17 +35,17 @@ file { '/var/www/html/some_page.html':
 # edit the configuration file and add the new page to it
 exec { 'add new page':
   command => '/usr/bin/sed -i \'/index index.html index.htm/s/;$/ some_page.html;/\' /etc/nginx/sites-available/default',
-  before  => Exec['add redirect']
 }
 
 # add a redirection to the configuration file
-exec { 'add redirect':
+exec { 'add redirection':
   command => '/usr/bin/sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
 
         location /redirect_me {
                 return 301 https://www.alxafrica.com/;
         }
 EOF',
+  require => Exec['add new page'],
   before  => File['/var/www/html/customized_404.html']
 }
 
