@@ -27,13 +27,13 @@ file { '/var/www/html/some_page.html':
 
 # edit the configuration file and add the new page to it
 exec { 'add new page':
-  command => 'sed -i \'/index index.html index.htm/s/;$/ some_page.html;/\' /etc/nginx/sites-available/default',
+  command => '/usr/bin/sed -i \'/index index.html index.htm/s/;$/ some_page.html;/\' /etc/nginx/sites-available/default',
   before  => Exec['add redirect']
 }
 
 # add a redirection to the configuration file
 exec { 'add redirect':
-  command => 'sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
+  command => '/usr/bin/sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
 
         location /redirect_me {
                 return 301 https://www.alxafrica.com/;
@@ -51,7 +51,7 @@ file { '/var/www/html/customized_404.html':
 
 # add custom 404 page to configuration file
 exec { 'add custom 404 page':
-  command => 'sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
+  command => '/usr/bin/sed -i \'/server_name _/ r /dev/stdin\' /etc/nginx/sites-available/default <<EOF
 
         error_page 404 /customized_404.html;
 EOF',
