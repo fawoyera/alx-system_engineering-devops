@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Bash script to bring up apache2 webserver in container
+service apache2 start
