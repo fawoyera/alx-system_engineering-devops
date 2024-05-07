@@ -1,4 +1,4 @@
-# Puppet manifest to install and configure nginx web serve and add custom headerr
+# Puppet manifest to install and configure nginx web server and add custom headerr
 
 # Install Nginx
 package { 'nginx':
@@ -51,7 +51,7 @@ server {
 
 
 # get the current hostname of server
-$hostname = $::hostname
+$hostname = scope('::hostname')
 
 # Add custom header configuration file
 file { '/etc/nginx/nginx.conf':
@@ -118,7 +118,6 @@ http {
         # gzip_comp_level 6;
         # gzip_buffers 16 8k;
         # gzip_http_version 1.1;
-        # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
         ##
         # Virtual Host Configs
