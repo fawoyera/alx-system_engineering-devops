@@ -7,6 +7,9 @@ apt update
 # install haproxy non-interactively
 apt install haproxy -y
 
+#start haproxy
+service haproxy start
+
 # append the configuration of frontend and backend to the configuration file
 echo -e "
 frontend http_fronthaul
