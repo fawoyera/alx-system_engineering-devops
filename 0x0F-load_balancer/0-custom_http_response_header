@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Bash script to install and configure nginx web server for redirection and custom header
+
+# Update the apt
+apt update
+
+# install nginx non-interactively
+apt install nginx -y
+
+# rename the default index page served by nginx
+mv /var/www/html/index.nginx-debian.html /var/www/html/_index.nginx-debian.html
+
+# create new page to be served by nginx
+touch /var/www/html/some_page.html
+
+# echo string into the new page to be served by nginx
+echo "Hello World!" > /var/www/html/some_page.html
+
+# edit and add the new page to the /etc/nginx/sites-available/default
+sed -i '/index index.html index.htm/s/;$/ some_page.html;/' /etc/nginx/sites-available/default
+
+# edit and add a redirect_me redirection to another page (alx website)
+sed -i '/server_name _/ r /dev/stdin' /etc/nginx/sites-available/default <<EOF
+
+	location /redirect_me {
+		return 301 https://www.alxafrica.com/;
+	}
+EOF
+
+# create, edit and add custom 404 page to /etc/nginx/sites-available/default
+touch /var/www/html/customized_404.html
+
+echo "Ceci n'est pas une page" > /var/www/html/customized_404.html
+
+sed -i '/server_name _/ r /dev/stdin' /etc/nginx/sites-available/default <<EOF
+
+	error_page 404 /customized_404.html;
+EOF
+
+# remove the default simlink
+rm /etc/nginx/sites-enabled/default
+
+# create a new simlink to /etc/nginx/site-available/default
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
+# Configure Nginx with custom HTTP header
+line_num=$(sed -n '/http {/=' /etc/nginx/nginx.conf)
+insert_line_num=$((line_num + 6))
+sed -i "${insert_line_num}i \\
+\tadd_header X-Served-By ${HOSTNAME};\n" /etc/nginx/nginx.conf
+
+# restart nginx
+service nginx restart
