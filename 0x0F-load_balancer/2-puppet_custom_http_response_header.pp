@@ -37,8 +37,6 @@ server {
 
 	server_name _;
 
-        add_header X-Served-By $scope('::hostname');
-
 	location /redirect_me {
 		return 301 https://www.alxafrica.com;
 	}
@@ -48,5 +46,11 @@ server {
 	}
 }",
   require => Package['nginx'],
-  notify  => Service['nginx'],
+}
+
+exec { 'add header':
+  command  => 'sed -i "/server_name _;/a add_header X-Served-By ${HOSTNAME};" /etc/nginx/sites-available/default',
+  provider => shell,
+  require  => File['/etc/nginx/sites-available/default'],
+  notify   => Service['nginx']
 }
