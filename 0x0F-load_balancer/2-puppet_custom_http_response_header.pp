@@ -37,7 +37,7 @@ server {
 
 	server_name _;
 
-        add_header X-Served-By scope('::hostname');
+        add_header X-Served-By $scope('::hostname');
 
 	location /redirect_me {
 		return 301 https://www.alxafrica.com;
