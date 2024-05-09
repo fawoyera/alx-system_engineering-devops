@@ -49,7 +49,7 @@ server {
 }
 
 exec { 'add header':
-  command  => 'sed -i "/server_name _;/a add_header X-Served-By ${HOSTNAME};" /etc/nginx/sites-available/default',
+  command  => 'sed -i "/server_name _;/a \\\tadd_header X-Served-By ${HOSTNAME};" /etc/nginx/sites-available/default',
   provider => shell,
   require  => File['/etc/nginx/sites-available/default'],
   notify   => Service['nginx']
