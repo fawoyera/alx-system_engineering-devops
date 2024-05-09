@@ -21,9 +21,6 @@ file { '/var/www/html/index.nginx-debian.html':
   content => 'Hello World!',
 }
 
-# get the current hostname of server
-$hostname = scope('::hostname')
-
 # Edit configuration file
 file { '/etc/nginx/sites-available/default':
   ensure  => file,
@@ -40,7 +37,7 @@ server {
 
 	server_name _;
 
-        add_header X-Served-By ${hostname};
+        add_header X-Served-By $::hostname;
 
 	location /redirect_me {
 		return 301 https://www.alxafrica.com;
