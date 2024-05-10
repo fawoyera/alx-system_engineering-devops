@@ -39,6 +39,7 @@ server {
 
 	location /redirect_me {
 		return 301 https://www.alxafrica.com;
+B
 	}
 
 	location / {
@@ -46,11 +47,16 @@ server {
 	}
 }",
   require => Package['nginx'],
+  notify  => Service['nginx']
 }
+A
 
 exec { 'add header':
-  command  => 'sed -i "/server_name _;/a \\\tadd_header X-Served-By ${HOSTNAME};" /etc/nginx/sites-available/default',
+  command  => 'line_num=$(sed -n \"/http {/=\" /etc/nginx/nginx.conf);
+  insert_line_num=$((line_num + 6));
+  sed -i \"${insert_line_num}i \\
+\tadd_header X-Served-By ${HOSTNAME}\;\n\" /etc/nginx/nginx.conf;
+  service nginx restart;',
   provider => shell,
-  require  => File['/etc/nginx/sites-available/default'],
-  notify   => Service['nginx']
+  require  => Package['nginx'],
 }
