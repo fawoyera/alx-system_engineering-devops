@@ -37,26 +37,16 @@ server {
 
 	server_name _;
 
+	add_header X-Served-By ${hostname};
+
 	location /redirect_me {
 		return 301 https://www.alxafrica.com;
-B
 	}
 
 	location / {
-		try_files $uri $uri/ =404;
+		try_files \$uri \$uri/ =404;
 	}
 }",
   require => Package['nginx'],
   notify  => Service['nginx']
-}
-A
-
-exec { 'add header':
-  command  => 'line_num=$(sed -n \"/http {/=\" /etc/nginx/nginx.conf);
-  insert_line_num=$((line_num + 6));
-  sed -i \"${insert_line_num}i \\
-\tadd_header X-Served-By ${HOSTNAME}\;\n\" /etc/nginx/nginx.conf;
-  service nginx restart;',
-  provider => shell,
-  require  => Package['nginx'],
 }
