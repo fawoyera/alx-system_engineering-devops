@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Bash script to print records of domain and subdomains
+
+
+#domain = $1
+#subdomain = $2
+
+func () {
+	if [ -z "$1" ]
+	then
+		echo "Usage: ./0-world_wide_web <domain> <subdomain>"
+		return 85
+	fi
+
+	if [ -z "$2" ]
+	then
+		for subdom in www lb-01 web-01 web-02; do
+			dig "$subdom.$1" | grep -A1 'ANSWER SECTION:' | awk 'NR == 2' | awk '{ sub("\\..*", "", $1); printf("The subdomain %s is a %s record and points to %s\n", $1, $4, $5) }'
+		done
+	else
+		dig $2.$1 | grep -A1 'ANSWER SECTION:' | awk 'NR == 2' | awk '{ sub("\\..*", "", $1); printf("The subdomain %s is a %s record and points to %s\n", $1, $4, $5) }'
+	fi
+}
+
+func $1 $2
