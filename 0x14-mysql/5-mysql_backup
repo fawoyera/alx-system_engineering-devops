@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Bash script to generate a MySQL dump and create a compressed archive out of it
+# Note: The root password should be passed as the first and only argument to this script
+
+# Check if the password is provided as an argument
+if [ $# -eq 0 ]; then
+	echo "Usage: $0 <mysql_root_password>"
+	exit 1
+fi
+
+# Run mysqldump with the provided password
+if [ -z "$1" ]; then
+	#If the password is empty, run mysqldump without -p option
+	sudo mysqldump -u root --all-databases > backup.sql
+else
+	# If the password is not empty, use the -p option
+	sudo mysqldump -u root -p"$1" --all-databases > backup.sql
+fi
+
+# Check if the dump was successful
+if [ $? -eq 0 ]; then
+	echo "Database dump was successful."
+else
+	echo "An error occured during database dump."
+	exit 1
+fi
+
+# Get the current date in day, month, year format
+CURRENT_DATE=$(date +"%d-%m-%Y")
+
+# Compress and Archive the backup file using tar
+tar -czvf "$CURRENT_DATE.tar.gz" backup.sql
+
+# Check if the compression was successful
+if [ $? -eq 0 ]; then
+	echo "Compression was successful."
+else
+	echo "Error occured during compression."
+	exit 1
+fi
