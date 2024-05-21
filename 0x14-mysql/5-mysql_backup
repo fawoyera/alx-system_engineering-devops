@@ -29,7 +29,7 @@ fi
 CURRENT_DATE=$(date +"%d-%m-%Y")
 
 # Compress and Archive the backup file using tar
-tar -czvf "$CURRENT_DATE.tar.gz" backup.sql
+sudo tar -czvf "$CURRENT_DATE.tar.gz" backup.sql
 
 # Check if the compression was successful
 if [ $? -eq 0 ]; then
