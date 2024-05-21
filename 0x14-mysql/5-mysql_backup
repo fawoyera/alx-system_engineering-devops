@@ -18,23 +18,23 @@ else
 fi
 
 # Check if the dump was successful
-if [ $? -eq 0 ]; then
-	echo "Database dump was successful."
-else
-	echo "An error occured during database dump."
-	exit 1
-fi
+#if [ $? -eq 0 ]; then
+#	echo "Database dump was successful."
+#else
+#	echo "An error occured during database dump."
+#	exit 1
+#fi
 
 # Get the current date in day, month, year format
 CURRENT_DATE=$(date +"%d-%m-%Y")
 
 # Compress and Archive the backup file using tar
-sudo tar -czvf "$CURRENT_DATE.tar.gz" backup.sql
+tar -czvf "$CURRENT_DATE.tar.gz" backup.sql
 
 # Check if the compression was successful
-if [ $? -eq 0 ]; then
-	echo "Compression was successful."
-else
-	echo "Error occured during compression."
-	exit 1
-fi
+#if [ $? -eq 0 ]; then
+#	echo "Compression was successful."
+#else
+#	echo "Error occured during compression."
+#	exit 1
+#fi
