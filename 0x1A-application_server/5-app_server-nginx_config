@@ -1,0 +1,53 @@
+server {
+        listen 80;
+        server_name 127.0.0.1;
+
+        location /api/ {
+                proxy_pass http://127.0.0.1:5002/api/;
+        }
+
+        location /airbnb-dynamic/number_odd_or_even/ {
+                proxy_pass http://127.0.0.1:5001/number_odd_or_even/;
+        }
+
+        location /static/ {
+                alias /home/ubuntu/AirBnB_clone_v4/web_dynamic/static/;
+                #try_files $uri =404;
+        }
+
+        location / {
+                proxy_pass http://127.0.0.1:5003/;
+        }
+
+        #location / {
+        #       include proxy_params;
+        #        proxy_pass http://unix:/home/ubuntu/AirBnB_clone_v2/myproject.sock;
+        #}
+}
+
+server {
+        listen 80;
+        server_name 100.26.173.61;
+
+        location /api/ {
+                proxy_pass http://127.0.0.1:5002/api/;
+        }
+
+        location /airbnb-dynamic/number_odd_or_even/ {
+                proxy_pass http://127.0.0.1:5001/number_odd_or_even/;
+        }
+
+        location /static/ {
+                alias /home/ubuntu/AirBnB_clone_v4/web_dynamic/static/;
+                #try_files $uri =404;
+        }
+
+        location / {
+                proxy_pass http://127.0.0.1:5003/;
+        }
+
+        #location / {
+        #        include proxy_params;
+        #        proxy_pass http://unix:/home/ubuntu/AirBnB_clone_v2/myproject.sock;
+        #}
+}
